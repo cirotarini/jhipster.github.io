@@ -1,0 +1,67 @@
+
+/**
+ERRORE FILTER: https://github.com/jhipster/jdl-samples/blob/master/blog.jh
+user, aggiungere: 
+ruolo capoprogetto
+field costo orario
+
+ */
+ 
+ entity Progetto {
+	nomeProgetto String maxlength (100) required ,
+	dataInizio LocalDate,
+	dataFine LocalDate,
+	fatturatoGg Integer, //campo calcolato
+	fatturatoEuro BigDecimal,  //campo calcolato
+	preventivoGiorni Integer,
+	preventivoEuro BigDecimal,
+	speseTrasferta BigDecimal, //campo calcolato
+	note String maxlength (1000),
+	risorse String maxlength (1000), //????????
+	attivo Boolean //(indica se per un progetto è ancora possibile inserire o meno le ore)
+}
+
+entity Attivita  {
+	 descrizione String maxlength (1000),
+     giorno LocalDate,
+     oreLavorate Integer,
+     trasferta Boolean, 
+     speseTrasferta BigDecimal,
+     costoOrario BigDecimal, //da anagrafica utenti)
+     totaleCosto BigDecimal,// (costo orario x ore)
+     daFatturare Boolean, 
+}
+
+entity DaFatturare {
+ 	titolo String  maxlength (100) required
+}
+entity Stati {
+ 	titolo String maxlength (100) required,  //??
+}
+
+entity Cliente {
+ 	ragioneSociale String maxlength (1000) required
+    email String maxlength (100) ,
+    telefono String maxlength (100),
+    indirizzo String maxlength (1000),
+    sito String maxlength (100),
+    note String maxlength (1000),
+}
+
+
+relationship ManyToOne {
+	Progetto{user(login)} to User //modificare codice, selezionando solo gli utenti con ruolo “responsabile”)
+}
+
+relationship OneToMany {
+     	Cliente to Progetto {cliente},
+        Cliente to Attivita {cliente}
+    	DaFatturare to Progetto {daFatturare},
+        Stati to Progetto {stato},
+        Stati to Attivita {stato},
+        Progetto to  Attivita {progetto},
+}
+
+paginate * with pagination
+filter Progetto
+
